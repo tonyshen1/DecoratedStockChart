@@ -181,6 +181,7 @@
                                         customBenchmark.sector,
                                         customBenchmark.rating,
                                         customBenchmark.wal,
+                                        customBenchmark.currency,
                                         customBenchmark.analytic.tag].join(".");
                                     dsc.removeSeriesById(id, scope);
                                 });
@@ -313,7 +314,7 @@
                             });
 
                             function validate(customBenchmark, result) {
-                                if (!customBenchmark.sector || !customBenchmark.wal || !customBenchmark.rating || !customBenchmark.analytic)
+                                if (!customBenchmark.sector || !customBenchmark.wal || !customBenchmark.currency || !customBenchmark.rating || !customBenchmark.analytic)
                                     scope.alerts.customBenchmark.messages = ["Some fields are missing!"];
                                 else if (result.errors)
                                     scope.alerts.customBenchmark.messages = result.errors;
@@ -325,6 +326,7 @@
                                         customBenchmark.sector,
                                         customBenchmark.rating,
                                         customBenchmark.wal,
+                                        customBenchmark.currency,
                                         customBenchmark.analytic.tag].join(".");
 
 
