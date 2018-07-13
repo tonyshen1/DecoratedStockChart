@@ -194,7 +194,11 @@
                                         <label>
                                             Currency&nbsp;
                                             <span class="restrict-dropdown-menu-small">
-                                                <input type="text" class="form-control length-md" ng-disabled="true" value="USD"/>
+                                                <input type="text" class="form-control length-md"
+                                                       ng-model="customBenchmark.currency"
+                                                       typeahead="currency for currency in customBenchmarkOptions.currencies | filter:$viewValue:$emptyOrMatch | orderBy:'toString()'"
+                                                       typeahead-focus
+                                                       typeahead-select-on-blur="true"/>
                                             </span>
                                         </label>
                                         <br/>

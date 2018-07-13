@@ -41,6 +41,7 @@ angular.module('Example', ['decorated-stock-chart']).controller("MainCtrl", func
             sector: "Sector A",
             rating: "A",
             wal: "All",
+            currency: "EUR",
             analytic: {tag: "price", label: "Price"}
         };
         return {
@@ -97,6 +98,7 @@ angular.module('Example', ['decorated-stock-chart']).controller("MainCtrl", func
     $scope.customBenchmarkOptions = {
         sectors: ['Sector A', 'Sector B'],
         wal: ["1 Year","3 Year","5 Year","7 Year","10 Year","All","30 Year"],
+        currencies: ["USD","EUR"],
         ratings:['CC','CCC','D','NR','A','AA','BB','BBB','AAA','B','C'],
         analytics: [{tag: "price", label: "Price"}, {tag: "volume", label: "Volume"}, {tag: "return", label: "Return"}]
     };
@@ -114,6 +116,10 @@ angular.module('Example', ['decorated-stock-chart']).controller("MainCtrl", func
                     if( $scope.customBenchmarkOptions.wal.indexOf(value) == -1 )
                         errorMessages.push(value + " is not a valid value for 'WAL'.");
                     break;
+                case "currency":
+                    if( $scope.customBenchmarkOptions.currencies.indexOf(value) == -1 )
+                        errorMessages.push(value + " is not a valid value for 'Currency'.");
+                    break;
                 case "rating":
                     if( $scope.customBenchmarkOptions.ratings.indexOf(value) == -1 )
                         errorMessages.push(value + " is not a valid value for 'Rating'.");
@@ -127,7 +133,7 @@ angular.module('Example', ['decorated-stock-chart']).controller("MainCtrl", func
             return {errors: errorMessages};
         else
             return {
-                name: [customBenchmark.sector, customBenchmark.wal, customBenchmark.rating, customBenchmark.analytic.label].join(" "),
+                name: [customBenchmark.sector, customBenchmark.wal, customBenchmark.currency, customBenchmark.rating, customBenchmark.analytic.label].join(" "),
                 data: simulate(domain(options), customBenchmark.analytic, {mean: 0.07, stddev: 0.13, initPrice: 100}, true)
             };
     };
