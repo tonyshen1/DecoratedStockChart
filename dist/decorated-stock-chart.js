@@ -361,14 +361,18 @@
                             }
 
                             scope.isProcessing = true;
+                            scope.states.chart.showLoading("Loading...");
                             if (result && angular.isFunction(result.then))
                                 result.then(function (series) {
                                     processSeries(series.status ? series.data : series);
                                 }, function () {
                                     scope.isProcessing = false;
+                                    scope.states.chart.hideLoading();
                                 });
-                            else
+                            else {
                                 processSeries(result);
+                                scope.states.chart.hideLoading();
+                            }
 
                             return true;
                         },
@@ -577,7 +581,7 @@
                             renderTo: "enriched-highstock-" + scope.id,
                             type: "spline",
                             marginTop: 30,
-                            zoomType: 'none',
+                            zoomType: 'x',
                             resetZoomButton: {
                                 theme: {
                                     display: 'none'
@@ -613,20 +617,20 @@
                             shared: true
                         },
                         xAxis: {
-                            type: "datetime"
-                            // events: {
-                            //     // If we zoom in on the chart, change the date range to those dates
-                            //     afterSetExtremes: function (event) {
-                            //         if (this.getExtremes().dataMin < event.min || this.getExtremes().dataMax > event.max) {
-                            //             scope.apiHandle.api.changeDateRange(event.min, event.max);
-                            //             this.chart.zoomOut();
-                            //             // Since this is unrelated to angular, we need run a digest to apply bindings
-                            //             scope.$apply(function(){
-                            //              scope.states.selectedTimePeriod = null;
-                            //             });
-                            //         }
-                            //     }
-                            // }
+                            type: "datetime",
+                            events: {
+                                 // If we zoom in on the chart, change the date range to those dates
+                                 afterSetExtremes: function (event) {
+                                     if (this.getExtremes().dataMin < event.min || this.getExtremes().dataMax > event.max) {
+                                         scope.apiHandle.api.changeDateRange(event.min, event.max);
+                                         this.chart.zoomOut();
+                                         // Since this is unrelated to angular, we need run a digest to apply bindings
+                                         scope.$apply(function(){
+                                          scope.states.selectedTimePeriod = null;
+                                         });
+                                     }
+                                 }
+                            }
                         },
                         yAxis: {
                             labels: {
@@ -786,12 +790,11 @@
                         /**
                          * remove the series associated with the given attr if found
                          */
-                        if (series) {
-                            const yAxis = series.yAxis;
-                            const securityId = series.options.securityId;
-                            series.remove();
-                            dsc.afterSeriesRemove(yAxis, securityId, scope);
-                        }
+                        const yAxis = series.yAxis;
+                        const securityId = series.options.securityId;
+                        series.remove();
+                        dsc.afterSeriesRemove(yAxis, securityId, scope);
+
 
                         /**
                          * remove attr from state

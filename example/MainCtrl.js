@@ -46,8 +46,7 @@ angular.module('Example', ['decorated-stock-chart']).controller("MainCtrl", func
         };
         return {
             name: security.label + " " + attr.label,
-            data: simulate(domain(options), attr, security),
-            showInNavigator: true
+            data: simulate(domain(options), attr, security)
         };
     };
 
