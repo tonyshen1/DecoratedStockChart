@@ -344,6 +344,7 @@
                                     else
                                         scope.addSeries(series);
                                     scope.isProcessing = false;
+                                    scope.states.chart.hideLoading();
                                     if (scope.states.customBenchmarks.indexOf(customBenchmark) === -1)
                                         scope.states.customBenchmarks.push(customBenchmark);
                                 }
@@ -371,7 +372,6 @@
                                 });
                             else {
                                 processSeries(result);
-                                scope.states.chart.hideLoading();
                             }
 
                             return true;
