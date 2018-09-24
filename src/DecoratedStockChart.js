@@ -182,6 +182,7 @@
                                         customBenchmark.rating,
                                         customBenchmark.wal,
                                         customBenchmark.currency,
+                                        customBenchmark.structure,
                                         customBenchmark.analytic.tag].join(".");
                                     dsc.removeSeriesById(id, scope);
                                 });
@@ -256,11 +257,21 @@
                             if (_.isFunction(scope.onSecurityRemove))
                                 scope.onSecurityRemove({id: id});
 
-                            // if(scope.states.securityAttrMap.length == 0){
-                            //     scope.states.chart.update({
-                            //         navigator: {enabled: false}
-                            //     });
+                            //update navigator
+                            // var nav = scope.states.chart.get('navigator');
+                            // if(scope.states.chart.series.length > 0){
+                            //     nav.setData(scope.states.chart.series[0].data);
+                            //     scope.states.chart.redraw();
+                            //     scope.states.chart.xAxis[0].setExtremes();
+                            // } else {
+                            //     nav.removeData();
                             // }
+
+                            if(scope.states.securityAttrMap.length == 0) {
+                                scope.states.chart.update({
+                                    navigator: {enabled: false}
+                                })
+                            }
 
                         },
                         addMarketIndicator: function ($item) {
@@ -314,7 +325,7 @@
                             });
 
                             function validate(customBenchmark, result) {
-                                if (!customBenchmark.sector || !customBenchmark.wal || !customBenchmark.currency || !customBenchmark.rating || !customBenchmark.analytic)
+                                if (!customBenchmark.sector || !customBenchmark.wal || !customBenchmark.currency || !customBenchmark.structure || !customBenchmark.rating || !customBenchmark.analytic)
                                     scope.alerts.customBenchmark.messages = ["Some fields are missing!"];
                                 else if (result.errors)
                                     scope.alerts.customBenchmark.messages = result.errors;
@@ -327,6 +338,7 @@
                                         customBenchmark.rating,
                                         customBenchmark.wal,
                                         customBenchmark.currency,
+                                        customBenchmark.structure,
                                         customBenchmark.analytic.tag].join(".");
 
 
@@ -587,6 +599,9 @@
                                     display: 'none'
                                 }
                             }
+                        },
+                        navigator: {
+                            enabled: true
                         },
                         title: {
                             text: scope.title || "Untitled",
@@ -884,8 +899,21 @@
                         else
                             seriesOption.yAxis = preferredYAxis;
 
+                        if(!chart.options.navigator.enabled)
+                            chart.update({navigator: {enabled: true}});
+
                         chart.addSeries(seriesOption);
-                        // chart.update({navigator: {enabled: true}});
+                        // chart.legend.align = 'center';
+                        // chart.verticalAlign = 'bottom';
+                        // chart.legend.render();
+
+                        //update navigator series
+                        // var nav = chart.get('navigator');
+                        // nav.data = seriesOption.data;
+                        // chart.xAxis[0].setExtremes();
+
+
+
                         dsc.attachLegendEventHandlers(chart.get(seriesOption.id), scope);
                     };
 

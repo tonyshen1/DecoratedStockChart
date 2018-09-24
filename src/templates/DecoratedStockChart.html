@@ -201,6 +201,16 @@
                                                        typeahead-select-on-blur="true"/>
                                             </span>
                                         </label>
+                                        <label>
+                                            Structure&nbsp;
+                                            <span class="restrict-dropdown-menu-small">
+                                                <input type="text" class="form-control length-md"
+                                                       ng-model="customBenchmark.structure"
+                                                       typeahead="structure for structure in customBenchmarkOptions.structures | filter:$viewValue:$emptyOrMatch | orderBy:'toString()'"
+                                                       typeahead-focus
+                                                       typeahead-select-on-blur="true"/>
+                                            </span>
+                                        </label>
                                         <br/>
                                         <button class="btn btn-success" ng-click="apiHandle.api.addCustomBenchmark(customBenchmark)"><i
                                         class="fa fa-play"></i></button>

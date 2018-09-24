@@ -4,3 +4,8 @@
   display: none;
   width: 40%;
 }
+
+.highcharts-legend {
+  top: 0px;
+  left: 0px;
+}
