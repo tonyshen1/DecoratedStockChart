@@ -267,11 +267,11 @@
                             //     nav.removeData();
                             // }
 
-                            if(scope.states.securityAttrMap.length == 0) {
-                                scope.states.chart.update({
-                                    navigator: {enabled: false}
-                                })
-                            }
+                            // if(scope.states.securityAttrMap.length == 0) {
+                            //     scope.states.chart.update({
+                            //         navigator: {enabled: false}
+                            //     })
+                            // }
 
                         },
                         addMarketIndicator: function ($item) {
@@ -600,9 +600,9 @@
                                 }
                             }
                         },
-                        navigator: {
-                            enabled: true
-                        },
+                        // navigator: {
+                        //     enabled: true
+                        // },
                         title: {
                             text: scope.title || "Untitled",
                             events: {
@@ -899,8 +899,8 @@
                         else
                             seriesOption.yAxis = preferredYAxis;
 
-                        if(!chart.options.navigator.enabled)
-                            chart.update({navigator: {enabled: true}});
+                        // if(!chart.options.navigator.enabled)
+                        //     chart.update({navigator: {enabled: true}});
 
                         chart.addSeries(seriesOption);
                         // chart.legend.align = 'center';
