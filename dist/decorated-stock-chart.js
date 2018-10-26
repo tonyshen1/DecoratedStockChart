@@ -318,10 +318,6 @@
                             function validate(customBenchmark, result) {
                                 if (!customBenchmark.sector || !customBenchmark.wal || !customBenchmark.currency || !customBenchmark.rating || !customBenchmark.analytic)
                                     scope.alerts.customBenchmark.messages = ["Some fields are missing!"];
-                                else if (customBenchmark.currency == 'USD' && scope.missUsdBenchmark == true )
-                                    scope.alerts.customBenchmark.messages = ["Missing permissions for certain Non USD custom benchmark data!"];
-                                else if (customBenchmark.currency != 'USD' && scope.missNonUsdBenchmark == true )
-                                    scope.alerts.customBenchmark.messages = ["Missing permissions for certain Non USD custom benchmark data!"];
                                 else if (result.errors)
                                     scope.alerts.customBenchmark.messages = result.errors;
                             }
@@ -854,18 +850,34 @@
                         /**
                          * determine if the series has no data, if so put out a warning
                          */
-                        if (!seriesOption.data || seriesOption.data.length == 0) {
+                        scope.alerts.generalWarning.active = false;
+
+                        //custom benchmark usd - id: CustomBenchmark.Wirelines.BBB.3 Year.USD.oas
+                        //custom benchmark non usd - id: CustomBenchmark.Wirelines.BBB.3 Year.AUD.oas
+                        if(seriesOption.id.indexOf("CustomBenchmark") != -1) {
+                            if (seriesOption.id.indexOf(".USD.") != -1) {
+                                if(scope.missUsdBenchmark == true) {
+                                    scope.alerts.generalWarning.active = true;
+                                    scope.alerts.generalWarning.message = "Missing permissions for certain USD custom benchmark data!";
+                                }
+                            } else if (scope.missNonUsdBenchmark == true ) {
+                                scope.alerts.generalWarning.active = true;
+                                scope.alerts.generalWarning.message = "Missing permissions for certain Non USD custom benchmark data!";
+                            }
+                        } else if(seriesOption.tag.indexOf("xccyOas") != -1 && seriesOption.missXccyOasPerm == true) {
                             scope.alerts.generalWarning.active = true;
-                            if(seriesOption.tag.indexOf("xccyOas") != -1 && seriesOption.missXccyOasPerm == true) {
-                                scope.alerts.generalWarning.message = "Missing permission to view cross currency OAS data for this security!";
-                            } else {
+                            scope.alerts.generalWarning.message = "Missing permission to view cross currency OAS data for this security!";
+                        }
+
+                        //Check if client has permission to view cross currency oas data for the security
+                        if (!seriesOption.data || seriesOption.data.length == 0) {
+                            if (scope.alerts.generalWarning.active != true) {
+                                scope.alerts.generalWarning.active = true;
                                 scope.alerts.generalWarning.message = "Added series contains no data!";
                             }
 
                             return;
                         }
-                        else
-                            scope.alerts.generalWarning.active = false;
 
                         /**
                          * add series click event listener .. this is different from legendItem click event listener
