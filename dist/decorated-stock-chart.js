@@ -108,7 +108,9 @@
                     showMarketIndicators: '=?',
                     showBenchmark: '=?',
                     showClientBenchmark: '=?',
-                    showCdxIndex: '='
+                    showCdxIndex: '=',
+                    missUsdBenchmark: '=',
+                    missNonUsdBenchmark: '='
                 },
                 link: function (scope, elem, attrs) {
 
@@ -316,6 +318,10 @@
                             function validate(customBenchmark, result) {
                                 if (!customBenchmark.sector || !customBenchmark.wal || !customBenchmark.currency || !customBenchmark.rating || !customBenchmark.analytic)
                                     scope.alerts.customBenchmark.messages = ["Some fields are missing!"];
+                                else if (customBenchmark.currency == 'USD' && scope.missUsdBenchmark == true )
+                                    scope.alerts.customBenchmark.messages = ["Missing permissions for certain Non USD custom benchmark data!"];
+                                else if (customBenchmark.currency != 'USD' && scope.missNonUsdBenchmark == true )
+                                    scope.alerts.customBenchmark.messages = ["Missing permissions for certain Non USD custom benchmark data!"];
                                 else if (result.errors)
                                     scope.alerts.customBenchmark.messages = result.errors;
                             }
@@ -850,7 +856,12 @@
                          */
                         if (!seriesOption.data || seriesOption.data.length == 0) {
                             scope.alerts.generalWarning.active = true;
-                            scope.alerts.generalWarning.message = "Added series contains no data!";
+                            if(seriesOption.tag.indexOf("xccyOas") != -1 && seriesOption.missXccyOasPerm == true) {
+                                scope.alerts.generalWarning.message = "Missing permission to view cross currency OAS data for this security!";
+                            } else {
+                                scope.alerts.generalWarning.message = "Added series contains no data!";
+                            }
+
                             return;
                         }
                         else
