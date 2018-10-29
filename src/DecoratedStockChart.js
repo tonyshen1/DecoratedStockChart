@@ -310,13 +310,16 @@
                         addCustomBenchmark: function (customBenchmark) {
                             scope.alerts.customBenchmark.messages = [];
 
+                            var addedBenchmarkString = JSON.stringify(customBenchmark);
+                            var addedBenchmark = JSON.parse(addedBenchmarkString);
+
                             const result = scope.onCustomBenchmarkSelect({
-                                customBenchmark: customBenchmark,
+                                customBenchmark: addedBenchmark,
                                 options: {dateRange: scope.states.dateRange}
                             });
 
-                            function validate(customBenchmark, result) {
-                                if (!customBenchmark.sector || !customBenchmark.wal || !customBenchmark.currency || !customBenchmark.rating || !customBenchmark.analytic)
+                            function validate(addedBenchmark, result) {
+                                if (!addedBenchmark.sector || !addedBenchmark.wal || !addedBenchmark.currency || !addedBenchmark.rating || !addedBenchmark.analytic)
                                     scope.alerts.customBenchmark.messages = ["Some fields are missing!"];
                                 else if (result.errors)
                                     scope.alerts.customBenchmark.messages = result.errors;
@@ -325,34 +328,43 @@
                             function processSeries(series) {
                                 if(series.data){
                                     series.id = ['CustomBenchmark',
-                                        customBenchmark.sector,
-                                        customBenchmark.rating,
-                                        customBenchmark.wal,
-                                        customBenchmark.currency,
-                                        customBenchmark.analytic.tag].join(".");
+                                        addedBenchmark.sector,
+                                        addedBenchmark.rating,
+                                        addedBenchmark.wal,
+                                        addedBenchmark.currency,
+                                        addedBenchmark.analytic.tag].join(".");
 
 
                                 /**
                                  * instruction on how to properly remove the series
                                  */
                                 series.onRemove = function () {
-                                    scope.states.customBenchmarks.splice(scope.states.customBenchmarks.indexOf(customBenchmark), 1);
+                                    var idxToRemove = -1;
+                                    for (idx in scope.states.customBenchmarks) {
+                                        if (addedBenchmarkString === JSON.stringify(scope.states.customBenchmarks[idx])) {
+                                            idxToRemove = idx;
+                                            break;
+                                        }
+                                    }
+                                    scope.states.customBenchmarks.splice(idxToRemove, 1);
                                     dsc.removeSeriesById(series.id, scope);
+
                                 };
 
                                     // Update the data it if it already exists
-                                    if (scope.states.chart.get(series.id))
+                                    if (scope.states.chart.get(series.id)) {
                                         scope.states.chart.get(series.id).setData(series.data);
-                                    else
+                                    }
+                                    else {
                                         scope.addSeries(series);
+                                        scope.states.customBenchmarks.push(addedBenchmark);
+                                    }
                                     scope.isProcessing = false;
                                     scope.states.chart.hideLoading();
-                                    if (scope.states.customBenchmarks.indexOf(customBenchmark) === -1)
-                                        scope.states.customBenchmarks.push(customBenchmark);
                                 }
                             }
 
-                            validate(customBenchmark, result);
+                            validate(addedBenchmark, result);
 
                             if (scope.alerts.customBenchmark.messages.length > 0) {
                                 scope.alerts.customBenchmark.active = true;
