@@ -876,7 +876,7 @@
                                 scope.alerts.generalWarning.active = true;
                                 scope.alerts.generalWarning.message = "Missing permissions for certain Non USD custom benchmark data!";
                             }
-                        } else if(seriesOption.tag.indexOf("xccyOas") != -1 && seriesOption.missXccyOasPerm == true) {
+                        } else if(seriesOption.tag != null && seriesOption.tag.indexOf("xccyOas") != -1 && seriesOption.missXccyOasPerm == true) {
                             scope.alerts.generalWarning.active = true;
                             scope.alerts.generalWarning.message = "Missing permission to view cross currency OAS data for this security!";
                         }
